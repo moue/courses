@@ -1,2 +1,4 @@
 keys.md
 courses/local_settings.py
+.DS_Store
+*.pyc
