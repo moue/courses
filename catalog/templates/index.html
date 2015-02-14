@@ -1,0 +1,220 @@
+{% extends "foundation/base.html" %}
+
+{% block title %}LP15 Course Catalog{% endblock title %}
+
+{% block css %}
+<style> body, a, a:hover { cursor:url('http://www.dolliehost.com/dolliecrave/cursors/cursors-all/animals01.gif'), auto }</style>
+{% endblock %}
+
+{% block base_body %}
+<div class="off-canvas-wrap" data-offcanvas>
+  <div class="inner-wrap">
+    <nav class="tab-bar">
+      <section class="left-small">
+        <a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+      </section>
+
+      <section class="middle tab-bar-section">
+        <h1 class="title">Foundation</h1>
+      </section>
+
+      <section class="right-small">
+        <a class="right-off-canvas-toggle menu-icon" ><span></span></a>
+      </section>
+    </nav>
+
+    <aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        <li><label>Foundation</label></li>
+        <li class="has-submenu"><a href="#">The Psychohistorians</a>
+            <ul class="left-submenu">
+                <li class="back"><a href="#">Back</a></li>
+                <li><label>Level 1</label></li>
+                <li><a href="#">Link 1</a></li>
+                <li class="has-submenu"><a href="#">Link 2 w/ submenu</a>
+                    <ul class="left-submenu">
+                        <li class="back"><a href="#">Back</a></li>
+                        <li><label>Level 2</label></li>
+                        <li><a href="#">...</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">...</a></li>
+            </ul>
+        </li>
+        <li><a href="#">The Encyclopedists</a></li>
+        <li><a href="#">The Mayors</a></li>
+        <li><a href="#">The Traders</a></li>
+        <li><a href="#">The Merchant Princes</a></li>
+      </ul>
+    </aside>
+
+    <aside class="right-off-canvas-menu">
+      <ul class="off-canvas-list">
+        <li><label>Users</label></li>
+        <li><a href="#">Hari Seldon</a></li>
+        <li class="has-submenu"><a href="#">R. Giskard Reventlov</a>
+            <ul class="right-submenu">
+                <li class="back"><a href="#">Back</a></li>
+                <li><label>Level 1</label></li>
+                <li><a href="#">Link 1</a></li>
+                <li class="has-submenu"><a href="#">Link 2 w/ submenu</a>
+                    <ul class="right-submenu">
+                        <li class="back"><a href="#">Back</a></li>
+                        <li><label>Level 2</label></li>
+                        <li><a href="#">...</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">...</a></li>
+            </ul>
+        </li>
+        <li><a href="#">...</a></li>
+      </ul>
+    </aside>
+
+    <section class="main-section large-12 columns">
+      {% include 'form.html' %}
+      <!---
+      {% for course in courses %}
+      <ul id="results-list">
+        <li class="result">
+            <div class="right">
+                <div class="time">{{ course.schedule }}</div>
+                <div class="term">{{ course.term }}</div>
+                <div class="enrollement">{{ course.number }}</div>
+            </div>
+            <div class="left">
+                <div class="course-code">{{ course.cat_num }}</div>
+                <div class="name">{{ course.name }}</div>
+                <div class="faculty">{{ course.faculty }}</div>
+            </div>
+      {% endfor %}-->
+        <table class="responsive" id="results-list">
+        <thead>
+            <tr id="courses-header-row">
+                <th id="list-header"></th>
+                <th id="number-header" class="column-header" data-solr-field="sort_course_group_code,num_int,num_char">Number</th>
+                <th id="title-header" class="column-header" data-solr-field="sort_title">Title</th>
+                <th id="q-header" class="column-header" data-solr-field="course_q">Q</th>
+                <th id="n-header" class="column-header" data-solr-field="n" rel="tooltip" data-original-title="&nbsp; Most Recent Enrollment" data-placement="left">n</th>
+                <th id="instructors-header">Instructors</th>
+                <th id="meeting-header">Meeting Time</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        {% for course in courses %}
+
+            <tr>
+                <td class="list-td">
+                    <div class="navbar lists-dropdown dropdown">
+                        <a id="btn-list-1892" data-course-count="0" data-toggle="dropdown" class="dropdown-toggle btn-lists-row">
+                            <i class="icon-list"></i>  
+                            <span class="number"> 
+                                0
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </div>
+                    <i class="icon-courses-star-empty"></i>
+                    <!--i class="icon-compare-empty"></i-->
+                </td>
+                <td class="time">{{ course.schedule }}</td>
+                <td class="term">{{ course.term }}</td>
+                <td class="enrollement">{{ course.number }}</td>
+                <td class="course-code">{{ course.cat_num }}</td>
+                <td class="name">{{ course.name }}</td>
+                <td class="faculty">{{ course.faculty }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </section>
+
+  <a class="exit-off-canvas"></a>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block body_js %}
+<script type="text/javascript">
+
+    /*Random background color- by javascriptkit.com
+    Visit JavaScript Kit (http://javascriptkit.com) for script
+    Credit must stay intact for use*/
+
+    //Enter list of bgcolors:
+    var bgcolorlist=new Array("#DFDFFF", "#FFFFBF", "#80FF80", "#EAEAFF", "#C9FFA8", "#F7F7F7", "#FFFFFF", "#DDDD00")
+
+    document.body.style.background=bgcolorlist[Math.floor(Math.random()*bgcolorlist.length)]
+
+    // http://palewi.re/posts/2010/11/07/django-recipe-twitter-style-infinite-scroll/
+    // http://alexkehayias.tumblr.com/post/15724356031/infinite-scroll-django
+    $(document).ready(function(){     
+       $(window).bind('scroll', loadOnScroll);
+    });
+
+    // Scroll globals
+    var pageNum = 1; // The latest page loaded
+    var hasNextPage = true; // Indicates whether to expect another page after this one
+
+    // loadOnScroll handler
+    var loadOnScroll = function() {
+       // If the current scroll position is past out cutoff point...
+        if ($(window).scrollTop() > $(document).height() - ($(window).height()*2)) {
+            // temporarily unhook the scroll event watcher so we don't call a bunch of times in a row
+            $(window).unbind(); 
+            // execute the load function below that will visit the JSON feed and stuff data into the HTML
+            loadItems();
+        }
+    };
+
+    var loadItems = function() {
+        // If the next page doesn't exist, just quit now 
+        if (hasNextPage === false) {
+            return false
+        }
+        // Update the page number
+        pageNum = pageNum + 1;
+        // Configure the url we're about to hit
+        $.ajax({
+            url: '',
+            data: {page_number: pageNum},
+            dataType: 'json',
+            success: function(data) {
+                // Update global next page variable
+                hasNextPage = true;//.hasNext;
+                // Loop through all items
+                for (i in data) {
+                    $("#newItems").before(html.join(""));
+                    // Do something with your json object response
+                }
+            },
+            error: function(data) {
+                // When I get a 400 back, fail safely
+                hasNextPage = false
+            },
+            complete: function(data, textStatus){
+                // Turn the scroll monitor back on
+                $(window).bind('scroll', loadOnScroll);
+            }
+        });
+    };
+</script>
+{% endblock %}
+
+{% block foundation_js_init %}
+<script>
+    $(document).foundation({
+        offcanvas : {
+            // Sets method in which offcanvas opens.
+            // [ move | overlap_single | overlap ]
+            open_method: 'move', 
+            // Should the menu close when a menu link is clicked?
+            // [ true | false ]
+            close_on_click : false
+        }
+    });
+</script>
+{% endblock foundation_js_init %}
